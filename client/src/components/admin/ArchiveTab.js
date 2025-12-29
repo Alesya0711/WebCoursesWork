@@ -228,6 +228,7 @@ export default function ArchiveTab() {
         </div>
       </div>
 
+      {/*модальное окно архивации пользователя*/}
       {showArchiveModal && (
         <div
           style={{
@@ -330,6 +331,7 @@ export default function ArchiveTab() {
         </div>
       )}
 
+      {/*модальное окно подтверждения*/}
       {showConfirmModal && (
         <ConfirmationModal
           title="Подтверждение"

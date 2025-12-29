@@ -253,6 +253,7 @@ const buttonStyle = (bgColor, disabled = false, isHovered = false) => ({
         </div>
       </div>
 
+      {/*модальное окно добавления преподавателя*/}
       {showAddForm && (
         <div
           style={{
@@ -377,6 +378,7 @@ const buttonStyle = (bgColor, disabled = false, isHovered = false) => ({
         </div>
       )}
 
+      {/*модальное окно редактирования преподавателя*/}
       {editingTeacher && (
         <div
           style={{
@@ -499,7 +501,7 @@ const buttonStyle = (bgColor, disabled = false, isHovered = false) => ({
           </div>
         </div>
       )}
-
+      {/*отображение ошибок*/}  
       {showErrorModal && (
         <div
           style={{

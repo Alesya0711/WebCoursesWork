@@ -36,6 +36,7 @@ export default function ReportsTab() {
       .catch(err => alert('Ошибка загрузки студентов'));
   }, []);
 
+  //отчет по успеваемости по группе
   const handleGradesByGroup = () => {
     if (!selectedGroupGrades) {
       alert('Выберите группу');
@@ -47,6 +48,7 @@ export default function ReportsTab() {
       .catch(err => alert('Ошибка загрузки отчёта'));
   };
 
+    //отчет по успеваемости по студенту
   const handleGradesByStudent = () => {
     if (!selectedStudentGrades) {
       alert('Выберите студента');
@@ -58,6 +60,7 @@ export default function ReportsTab() {
       .catch(err => alert('Ошибка загрузки отчёта'));
   };
 
+    //отчет по посещаемости по группе
   const handleAttendanceByGroup = () => {
     if (!selectedGroupAttendance) {
       alert('Выберите группу');
@@ -69,6 +72,7 @@ export default function ReportsTab() {
       .catch(err => alert('Ошибка загрузки отчёта'));
   };
 
+    //отчет по посещаемости по студенту
   const handleAttendanceByStudent = () => {
     if (!selectedStudentAttendance) {
       alert('Выберите студента');

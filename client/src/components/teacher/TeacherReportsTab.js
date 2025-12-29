@@ -9,6 +9,7 @@ const selectedBg = '#a5d6a7';
 const tableWidth = '900px';
 const fontSize = '20px'; 
 
+//Утилита для отображения оценок
 const formatGrade = (value) => {
   if (value == null) return '—';
   const num = typeof value === 'string' ? parseFloat(value) : value;
@@ -16,15 +17,16 @@ const formatGrade = (value) => {
 };
 
 export default function TeacherReportsTab({ teacherId }) {
+  //стейты для выбора
   const [courses, setCourses] = useState([]);
   const [groups, setGroups] = useState([]);
   const [students, setStudents] = useState([]);
-
+  //стейты для успеваемости
   const [courseGrades, setCourseGrades] = useState(null);
   const [groupGrades, setGroupGrades] = useState(null);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [gradesReport, setGradesReport] = useState([]);
-
+  //стейты для посещаемости
   const [courseAttendance, setCourseAttendance] = useState(null);
   const [groupAttendance, setGroupAttendance] = useState(null);
   const [selectedAttendanceStudentId, setSelectedAttendanceStudentId] = useState(null);
@@ -32,7 +34,7 @@ export default function TeacherReportsTab({ teacherId }) {
   const [hoveredButton, setHoveredButton] = useState(null); 
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  //Загрузка курсов преподавателя
   useEffect(() => {
     fetch(`/api/teachers/courses.php?teacher_id=${teacherId}`)
       .then(r => r.json())
@@ -40,6 +42,7 @@ export default function TeacherReportsTab({ teacherId }) {
       .catch(err => alert('Ошибка загрузки курсов'));
   }, [teacherId]);
 
+  //Загрузка групп (для успеваемости)
   useEffect(() => {
     if (courseGrades) {
       fetch(`/api/groups/get-by-course.php?course_id=${courseGrades}`)
@@ -57,6 +60,7 @@ export default function TeacherReportsTab({ teacherId }) {
     loadStudentsByGroup(groupGrades, false);
   }, [groupGrades]);
 
+  //Загрузка групп (для посещаемости)
   useEffect(() => {
     if (courseAttendance) {
       fetch(`/api/groups/get-by-course.php?course_id=${courseAttendance}`)
@@ -79,6 +83,7 @@ export default function TeacherReportsTab({ teacherId }) {
     setShowErrorModal(true);
   };
 
+  //Загрузка студентов по группе
   const loadStudentsByGroup = (groupId, isForAttendance = false) => {
     if (!groupId) {
       setStudents([]);
@@ -106,7 +111,7 @@ export default function TeacherReportsTab({ teacherId }) {
         alert('Ошибка загрузки студентов');
       });
   };
-
+  // Обработчик кнопоки отчётов по успеваемости по группе
   const handleGradesByGroup = () => {
     if (!groupGrades) {
       showError('Выберите группу');
@@ -118,6 +123,7 @@ export default function TeacherReportsTab({ teacherId }) {
       .catch(err => alert('Ошибка загрузки отчёта'));
   };
 
+    // Обработчик кнопоки отчётов по успеваемости по студенту
   const handleGradesByStudent = () => {
     if (!selectedStudentId) {
       showError('Выберите студента');
@@ -129,6 +135,7 @@ export default function TeacherReportsTab({ teacherId }) {
       .catch(err => alert('Ошибка загрузки отчёта'));
   };
 
+  // Обработчик кнопоки отчётов по посещаемости по группе
   const handleAttendanceByGroup = () => {
     if (!groupAttendance) {
       showError('Выберите группу');
@@ -139,7 +146,7 @@ export default function TeacherReportsTab({ teacherId }) {
       .then(setAttendanceReport)
       .catch(err => alert('Ошибка загрузки отчёта'));
   };
-
+  // Обработчик кнопоки отчётов по посещаемости по студенту
   const handleAttendanceByStudent = () => {
     if (!selectedAttendanceStudentId) {
       showError('Выберите студента');
@@ -151,6 +158,7 @@ export default function TeacherReportsTab({ teacherId }) {
       .catch(err => alert('Ошибка загрузки отчёта'));
   };
 
+  //стиль кнопки
   const buttonStyle = (bgColor, disabled = false, isHovered = false) => ({
     backgroundColor: disabled ? '#bdbdbd' : bgColor,
     color: 'white',
@@ -198,7 +206,7 @@ export default function TeacherReportsTab({ teacherId }) {
           <h3 style={{ margin: 0, color: '#1b5e20', fontSize: '30px', fontWeight: 'bold', marginBottom: '20px' }}>
             Успеваемость
           </h3>
-
+          {/*настройка отчета*/}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -289,7 +297,8 @@ export default function TeacherReportsTab({ teacherId }) {
               </button>
             </div>
           </div>
-
+          
+          {/*настройка таблиц для отображения данных*/}
           <div style={{ padding: '12px', borderRadius: '6px', backgroundColor: 'transparent' }}>
             <table
               style={{
@@ -363,7 +372,7 @@ export default function TeacherReportsTab({ teacherId }) {
           <h3 style={{ margin: 0, color: '#1b5e20', fontSize: '30px', fontWeight: 'bold', marginBottom: '20px' }}>
             Посещаемость
           </h3>
-
+          {/*настройка отчета*/}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <label style={{ fontWeight: 'bold', minWidth: '80px' }}>Курс:</label>
@@ -453,7 +462,7 @@ export default function TeacherReportsTab({ teacherId }) {
               </button>
             </div>
           </div>
-
+          {/*настройка таблиц для отображения данных*/}
           <div style={{ padding: '12px', borderRadius: '6px', backgroundColor: 'transparent' }}>
             {Array.isArray(attendanceReport) && attendanceReport.length > 0 ? (
               <table
@@ -555,7 +564,7 @@ export default function TeacherReportsTab({ teacherId }) {
           </div>
         </div>
       </div>
-
+      {/*кастомное окно ошибки*/}
       {showErrorModal && (
         <div
           style={{

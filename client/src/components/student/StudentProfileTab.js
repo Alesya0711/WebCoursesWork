@@ -75,6 +75,7 @@ export default function StudentProfileTab() {
     return typeof value === 'number' ? value.toFixed(2) : value;
   };
 
+  //обновление фото
   const handlePhotoUpload = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -259,6 +260,7 @@ export default function StudentProfileTab() {
           <h3 style={{ margin: 0, color: '#1b5e20', fontSize: '24px', fontWeight: 'bold', marginBottom: '12px' }}>
             Мои курсы
           </h3>
+          {/*отображение всех курсов студента*/}
           {courses.length > 0 ? (
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {courses.map(course => (

@@ -22,6 +22,7 @@ export default function AttendanceTab({ teacherId }) {
   const [attendanceRecords, setAttendanceRecords] = useState([]);
   const [isSaveButtonHovered, setIsSaveButtonHovered] = useState(false);
 
+  //Загрузка курсов преподавателя
   useEffect(() => {
     fetch(`/api/teachers/courses.php?teacher_id=${teacherId}`)
       .then(r => r.json())
@@ -29,6 +30,7 @@ export default function AttendanceTab({ teacherId }) {
       .catch(err => alert('Ошибка загрузки курсов'));
   }, [teacherId]);
 
+  //Загрузка групп по курсу
   useEffect(() => {
     if (selectedCourseId) {
       fetch(`/api/groups/get-by-course.php?course_id=${selectedCourseId}`)
@@ -41,6 +43,7 @@ export default function AttendanceTab({ teacherId }) {
     }
   }, [selectedCourseId]);
 
+  //Загрузка тем по группе
   useEffect(() => {
     if (selectedGroupId) {
       fetch(`/api/topics/get-by-group.php?group_id=${selectedGroupId}`)
@@ -53,6 +56,7 @@ export default function AttendanceTab({ teacherId }) {
     }
   }, [selectedGroupId]);
 
+  //Загрузка занятий по теме
   useEffect(() => {
     if (selectedTopicId) {
       fetch(`/api/lessons/get-by-topic.php?topic_id=${selectedTopicId}`)
@@ -65,6 +69,7 @@ export default function AttendanceTab({ teacherId }) {
     }
   }, [selectedTopicId]);
 
+  //Загрузка посещаемости по занятию и группе
   useEffect(() => {
     if (selectedLessonId && selectedGroupId) {
       fetch(`/api/attendance/get-by-lesson-and-group.php?lesson_id=${selectedLessonId}&group_id=${selectedGroupId}`)
@@ -99,6 +104,7 @@ export default function AttendanceTab({ teacherId }) {
     </tr>
   );
 
+  //кнопка сохранения посещаемости
   const handleSave = () => {
     if (!selectedLessonId || !selectedGroupId) {
       alert('Выберите группу и занятие');
@@ -163,6 +169,7 @@ export default function AttendanceTab({ teacherId }) {
           </h3>
         </div>
 
+        {/*настройка посещаемости*/}
         <div style={{ width: tableWidth, margin: '0 auto' }}>
           <div style={{ marginBottom: '12px' }}>
             <label style={{ fontWeight: 'bold', marginRight: '8px' }}>Курс:</label>

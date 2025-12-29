@@ -2,12 +2,14 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 
+//создаем контекст
 const AuthContext = createContext();
-
+//Компонент-обёртка, который предоставляет данные всем дочерним компонентам
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const navigate = useNavigate(); 
 
+  //восстановление пользователя
   useEffect(() => {
     const stored = sessionStorage.getItem('user');
     if (stored) {
@@ -29,8 +31,8 @@ export function AuthProvider({ children }) {
       middle_name: userData.middle_name,
       email: userData.email
     };}
-    
-    if (userData.role === 'student') {
+  //добавляем данные студента  
+  if (userData.role === 'student') {
     userData.student = {
       student_id: userData.student_id,
       last_name: userData.last_name,
@@ -45,19 +47,20 @@ export function AuthProvider({ children }) {
   navigate('/', { replace: true });
 };
 
+  //переход на страницу входа
   const logout = () => {
     sessionStorage.removeItem('user');
     setUser(null);
     navigate('/login', { replace: true });
   };
-
+//Передаёт в контекст: user, login, logout.
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
-
+//хук для доступа к контексту
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

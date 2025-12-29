@@ -16,7 +16,6 @@ export default function PerformanceTab({ teacherId }) {
   const [courses, setCourses] = useState([]);
   const [groups, setGroups] = useState([]);
   const [topics, setTopics] = useState([]);
-
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [selectedTopicId, setSelectedTopicId] = useState(null);
@@ -59,6 +58,7 @@ export default function PerformanceTab({ teacherId }) {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  //Загрузка курсов преподавателя
   useEffect(() => {
     fetch(`/api/teachers/courses.php?teacher_id=${teacherId}`)
       .then(r => r.json())
@@ -66,6 +66,7 @@ export default function PerformanceTab({ teacherId }) {
       .catch(() => setCourses([]));
   }, [teacherId]);
 
+  //Загрузка групп по курсу
   useEffect(() => {
     if (selectedCourseId) {
       fetch(`/api/groups/get-by-course.php?course_id=${selectedCourseId}`)
@@ -78,6 +79,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   }, [selectedCourseId]);
 
+  //Загрузка тем по группе
   useEffect(() => {
     if (selectedGroupId) {
       fetch(`/api/topics/get-by-group.php?group_id=${selectedGroupId}`)
@@ -90,6 +92,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   }, [selectedGroupId]);
 
+  //Загрузка заданий по теме и группе
   useEffect(() => {
     if (selectedTopicId && selectedGroupId) {
       fetch(`/api/assignments/get-by-topic-and-group.php?topic_id=${selectedTopicId}&group_id=${selectedGroupId}`)
@@ -101,6 +104,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   }, [selectedTopicId, selectedGroupId]);
 
+  //Загрузка итоговых работ по курсу и группе
   useEffect(() => {
     if (selectedGroupId && selectedCourseId) {
       fetch(`/api/finalworks/get-by-course-and-group.php?course_id=${selectedCourseId}&group_id=${selectedGroupId}`)
@@ -112,6 +116,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   }, [selectedGroupId, selectedCourseId]);
 
+  //Загрузка студентов для инд заданий
   useEffect(() => {
     if (showAddAssignment && selectedGroupId) {
       fetch(`/api/students/get-by-group.php?group_id=${selectedGroupId}`)
@@ -121,6 +126,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   }, [showAddAssignment, selectedGroupId]);
 
+ //Загрузка студентов для итоговой работы
  useEffect(() => {
     if (showAddFinalWork && selectedGroupId) {
       fetch(`/api/students/get-by-group.php?group_id=${selectedGroupId}`)
@@ -138,6 +144,7 @@ export default function PerformanceTab({ teacherId }) {
     setShowErrorModal(true);
   };
 
+  //стиль кнопки
   const buttonStyle = (bgColor, disabled = false, isHovered = false) => ({
     backgroundColor: disabled ? '#bdbdbd' : bgColor,
     color: 'white',
@@ -161,6 +168,7 @@ export default function PerformanceTab({ teacherId }) {
     </tr>
   );
 
+  //добавление нового задания
   const handleAddAssignment = () => {
     if (!selectedTopicId || !selectedGroupId) {
       showError('Выберите группу и тему');
@@ -175,6 +183,7 @@ export default function PerformanceTab({ teacherId }) {
     setShowAddAssignment(true);
   };
 
+  //сохранение задания
   const handleSaveAssignment = async () => {
     if (!newAssignment.student_id || !newAssignment.assignment_name) {
       showError('Выберите студента и введите название');
@@ -198,6 +207,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   };
 
+  //изменение задания
   const handleEditAssignment = () => {
     if (!selectedAssignmentId) {
       alert('Выберите задание для редактирования');
@@ -208,6 +218,7 @@ export default function PerformanceTab({ teacherId }) {
     setShowEditAssignment(true);
   };
 
+  //сохранение изменений задания
   const handleSaveEditAssignment = async () => {
     if (!editingAssignment?.assignment_name) {
       alert('Название задания обязательно');
@@ -231,6 +242,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   };
 
+  //удаление задания
   const handleDeleteAssignment = () => {
     if (!selectedAssignmentId) {
       alert('Выберите задание для удаления');
@@ -245,6 +257,7 @@ export default function PerformanceTab({ teacherId }) {
     });
   };
 
+  //выставление оценок
   const handleSetGrade = () => {
     if (!selectedAssignmentId) {
       alert('Выберите задание для выставления оценки');
@@ -255,6 +268,7 @@ export default function PerformanceTab({ teacherId }) {
     setShowGradeAssignment(true);
   };
 
+  //сохранение оценки
   const handleSaveGrade = async () => {
     try {
       if (!gradingAssignment.assignment_name) {
@@ -282,6 +296,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   };
 
+  //добавление итоговой работы
   const handleAddFinalWork = () => {
     if (!selectedCourseId || !selectedGroupId) {
       showError('Выберите курс и группу');
@@ -297,6 +312,7 @@ export default function PerformanceTab({ teacherId }) {
     setShowAddFinalWork(true);
   };
 
+  //сохранение итоговой работы
   const handleSaveFinalWork = async () => {
     if (!newFinalWork.student_id || !newFinalWork.ticket_number) {
       showError('Выберите студента и введите номер билета');
@@ -323,6 +339,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   };
 
+  //изменение итоговой работы
   const handleEditFinalWork = () => {
     if (!selectedFinalWorkId) {
       alert('Выберите итоговую работу для редактирования');
@@ -333,6 +350,7 @@ export default function PerformanceTab({ teacherId }) {
     setShowEditFinalWork(true);
   };
 
+  //сохранение изменений итоговой работы
   const handleSaveEditFinalWork = async () => {
     try {
       const res = await fetch('/api/finalworks/update.php', {
@@ -352,6 +370,7 @@ export default function PerformanceTab({ teacherId }) {
     }
   };
 
+  //удаление итоговой работы
   const handleDeleteFinalWork = () => {
     if (!selectedFinalWorkId) {
       alert('Выберите итоговую работу для удаления');
@@ -366,6 +385,7 @@ export default function PerformanceTab({ teacherId }) {
     });
   };
 
+  //подтверждение удалений
   const handleConfirm = async () => {
     if (!confirmModal) return;
     if (confirmModal.action === 'deleteAssignment') {
@@ -457,6 +477,7 @@ export default function PerformanceTab({ teacherId }) {
               Управление успеваемостью
             </h3>
 
+            {/*настройка успеваемости*/}
             <div style={{ marginBottom: '12px' }}>
               <label style={{ fontWeight: 'bold', marginRight: '8px' }}>Курс:</label>
               <select
@@ -524,13 +545,14 @@ export default function PerformanceTab({ teacherId }) {
             )}
           </div>
         </div>
-
+          
         <div style={{ width: tableWidth, margin: '30px auto 0' }}>
           <div style={{ marginBottom: '16px' }}>
             <h3 style={{ margin: 0, color: '#1b5e20', fontSize: '24px', fontWeight: 'bold', marginBottom: '12px' }}>
               Индивидуальные задания
             </h3>
               <div>
+                {/*кнопки*/}
                 <button
                   onMouseEnter={() => setHoveredButton('addAssign')}
                   onMouseLeave={() => setHoveredButton(null)}
@@ -568,6 +590,7 @@ export default function PerformanceTab({ teacherId }) {
                 </button>
               </div>
           </div>
+          {/*настройка таблиц отображения данных*/}
           <div style={{ padding: '12px', borderRadius: '6px', backgroundColor: 'transparent' }}>
             <table
               style={{
@@ -616,6 +639,7 @@ export default function PerformanceTab({ teacherId }) {
               Итоговая работа
             </h3>
               <div>
+                {/*кнопки*/}
                 <button
                   onMouseEnter={() => setHoveredButton('addFinal')}
                   onMouseLeave={() => setHoveredButton(null)}
@@ -645,6 +669,7 @@ export default function PerformanceTab({ teacherId }) {
               </div>
           </div>
           <div style={{ padding: '12px', borderRadius: '6px', backgroundColor: 'transparent' }}>
+            {/*настройка отображения данных*/}
             <table
               style={{
                 width: '100%',
@@ -700,6 +725,7 @@ export default function PerformanceTab({ teacherId }) {
         </div>
       </div>
 
+      {/*модальное окно добавления индивидуального задания*/}
       {showAddAssignment && (
         <div
           style={{
@@ -783,6 +809,7 @@ export default function PerformanceTab({ teacherId }) {
         </div>
       )}
 
+      {/*модальное окно редактирования индивидуального задания*/}
       {showEditAssignment && (
         <div
           style={{
@@ -857,6 +884,7 @@ export default function PerformanceTab({ teacherId }) {
         </div>
       )}
 
+      {/*модальное окно выставления оценки индивидуального задания*/}
       {showGradeAssignment && (
         <div
           style={{
@@ -935,6 +963,7 @@ export default function PerformanceTab({ teacherId }) {
         </div>
       )}
 
+      {/*модальное окно добавления итоговой работы*/}
       {showAddFinalWork && (
         <div
           style={{
@@ -1040,6 +1069,7 @@ export default function PerformanceTab({ teacherId }) {
         </div>
       )}
 
+      {/*модальное окно редактирования итоговой работы*/}
       {showEditFinalWork && editingFinalWork && (
         <div
           style={{
@@ -1145,6 +1175,7 @@ export default function PerformanceTab({ teacherId }) {
         />
       )}
 
+      {/*модальное окно ошибки*/}
       {showErrorModal && (
         <div
           style={{

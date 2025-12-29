@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function LoginPage() {
+  //стейты введенного имя, пароля, ошибка
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -15,15 +16,18 @@ export default function LoginPage() {
     setError('');
 
     try {
+      //отправка данных на сервер
       const res = await fetch('/api/auth.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       });
 
+      //обработка ответа
       const data = await res.json();
 
       if (res.ok) {
+        //сохраняем данные
         login(data);
       } else {
         setError(data.error || 'Ошибка входа');

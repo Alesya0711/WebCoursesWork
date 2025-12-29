@@ -8,7 +8,7 @@ export default function LogoutButton() {
     sessionStorage.removeItem('user');
     navigate('/login', { replace: true });
   };
-
+  //стиль для кнопки выйти
   return (
     <button
       onClick={handleLogout}

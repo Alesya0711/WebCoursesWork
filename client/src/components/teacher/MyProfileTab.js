@@ -12,6 +12,7 @@ export default function MyProfileTab() {
   const { user } = useAuth();
   const [courses, setCourses] = useState([]);
 
+  //загрузка курсов 
   useEffect(() => {
     if (user?.teacher_id) {
       fetch(`/api/teachers/courses.php?teacher_id=${user.teacher_id}`)

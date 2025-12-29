@@ -8,9 +8,10 @@ import TeacherReportsTab from './teacher/TeacherReportsTab';
 
 // Цвета
 const primaryGreen = '#1b5e20';
-const lightGreen = '#e8f5e9'; // ← фон
+const lightGreen = '#e8f5e9'; 
 const buttonGreen = '#388e3c';
 
+//устанавливает начальную вкладку
 export default function TeacherPanel() {
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
@@ -25,9 +26,11 @@ export default function TeacherPanel() {
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
+        {/* шапка с приветствием */}
         <h1 style={{ margin: 0, fontSize: '24px' }}>
           Здравствуйте{user?.teacher?.first_name ? `, ${user.teacher.first_name} ${user.teacher.middle_name || ''}` : ''}!
         </h1>
+        {/*кнопка выйти*/}
         <button
           onClick={logout}
           style={{
@@ -43,6 +46,7 @@ export default function TeacherPanel() {
         </button>
       </div>
 
+       {/*панель навигации с кнопками*/}
       <div style={{ padding: '20px' }}>
         <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
           {['profile', 'performance', 'attendance', 'reports'].map(tab => (
@@ -68,7 +72,7 @@ export default function TeacherPanel() {
             </button>
           ))}
         </div>
-
+         {/*вкладки*/}
         <div style={{ backgroundColor: lightGreen, padding: '20px', borderRadius: '8px' }}>
           {activeTab === 'profile' && <MyProfileTab />}
           {activeTab === 'performance' && user?.teacher?.teacher_id && <PerformanceTab teacherId={user.teacher.teacher_id} />}

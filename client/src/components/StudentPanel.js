@@ -8,6 +8,7 @@ const primaryGreen = '#1b5e20';
 const lightGreen = '#e8f5e9';
 const buttonGreen = '#388e3c';
 
+//состояние компонентов: загрузка профиля и загрузка курсов
 export default function StudentPanel() {
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
@@ -27,9 +28,11 @@ export default function StudentPanel() {
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
+         {/*приветствие*/}
         <h1 style={{ margin: 0, fontSize: '24px' }}>
           Здравствуйте, {displayName}!
         </h1>
+         {/*кнопка выйти*/}
         <button
           onClick={logout}
           style={{

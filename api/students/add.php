@@ -27,7 +27,7 @@ if ($email && !preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', 
     exit;
 }
 
-// Хеширование пароля (как в C#)
+// Хеширование пароля
 function hashPassword($password) {
     $salt = random_bytes(32);
     $passwordBytes = mb_convert_encoding($password, 'UTF-8');
@@ -47,7 +47,7 @@ try {
         $class_id,
         $group_id,
         $middle_name ?: null,
-        null, // phone (у тебя не используется)
+        null, 
         $email ?: null
     ]);
     $pdo->commit();

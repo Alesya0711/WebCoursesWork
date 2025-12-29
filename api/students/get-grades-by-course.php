@@ -6,9 +6,7 @@ require_once '../config.php';
 $student_id = (int)($_SESSION['user']['student_id'] ?? 0);
 $course_id = (int)($_GET['course_id'] ?? 0);
 
-// ← ОШИБКА! Нет SESSION в API!
-
-// ИСПРАВЛЕНИЕ: получаем student_id из GET
+//получаем student_id из GET
 $student_id = (int)($_GET['student_id'] ?? 0);
 $course_id = (int)($_GET['course_id'] ?? 0);
 

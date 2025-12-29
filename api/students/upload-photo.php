@@ -30,8 +30,7 @@ try {
         throw new Exception('Не удалось сохранить файл');
     }
 
-    // Сохраняем путь в БД (если колонки нет — создай)
-    // ALTER TABLE students ADD COLUMN photo_path VARCHAR(255);
+    // Сохраняем путь в БД 
     $stmt = $pdo->prepare("UPDATE students SET photo_path = ? WHERE student_id = ?");
     $stmt->execute([$filename, $student_id]);
 

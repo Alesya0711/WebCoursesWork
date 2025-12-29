@@ -13,27 +13,34 @@ if (!$user_id) {
 }
 
 try {
+    //начало транзакции
     $pdo->beginTransaction();
+    //получаем роль пользователя
     $stmt = $pdo->prepare("SELECT role FROM users WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $role = $stmt->fetchColumn();
 
+    //если препод, то проверяем его курсы
     if ($role === 'teacher') {
         $stmt = $pdo->prepare("
             SELECT 1 FROM courses 
             WHERE teacher_id = (SELECT teacher_id FROM teachers WHERE user_id = ?)
         ");
         $stmt->execute([$user_id]);
+        //если курсы есть, то не архивируем
         if ($stmt->fetch()) {
             throw new Exception('Нельзя архивировать преподавателя, который ведёт хотя бы один курс.');
         }
     }
 
+    //архивируем пользователя
     $stmt = $pdo->prepare("UPDATE users SET is_active = FALSE WHERE user_id = ?");
     $stmt->execute([$user_id]);
+    //комитим транзакцию
     $pdo->commit();
     echo json_encode(['success' => true]);
 } catch (Exception $e) {
+    //если ошибки, откатываем транзакцию
     $pdo->rollBack();
     echo json_encode(['error' => $e->getMessage()]);
 }

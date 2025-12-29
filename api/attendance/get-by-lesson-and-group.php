@@ -2,7 +2,7 @@
 // api/attendance/get-by-lesson-and-group.php
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config.php';
-
+//получаем данные
 $lesson_id = (int)($_GET['lesson_id'] ?? 0);
 $group_id = (int)($_GET['group_id'] ?? 0);
 
@@ -13,6 +13,7 @@ if (!$lesson_id || !$group_id) {
 }
 
 try {
+    //получам тип и название занятия
     $stmt = $pdo->prepare("
         SELECT 
             l.lesson_type,
@@ -29,6 +30,7 @@ try {
         exit;
     }
 
+    //получаем активвных студентов
     $stmt = $pdo->prepare("
         SELECT s.student_id, s.last_name || ' ' || s.first_name AS full_name
         FROM students s
@@ -40,17 +42,20 @@ try {
     $stmt->execute([$group_id]);
     $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    //получам посещаемость
     $stmt = $pdo->prepare("
         SELECT student_id, is_present
         FROM attendance
         WHERE lesson_id = ?
     ");
     $stmt->execute([$lesson_id]);
+    //создаем массив ключ-значение
     $attendanceMap = [];
     while ($row = $stmt->fetch()) {
         $attendanceMap[$row['student_id']] = $row['is_present'];
     }
 
+    //заполняем значениями
     $result = [];
     foreach ($students as $s) {
         $result[] = [
@@ -62,6 +67,7 @@ try {
         ];
     }
 
+    //отправляем json
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);

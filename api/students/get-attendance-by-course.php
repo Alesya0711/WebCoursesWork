@@ -7,7 +7,6 @@ $student_id = (int)($_GET['student_id'] ?? 0);
 $course_id = (int)($_GET['course_id'] ?? 0);
 
 if (!$student_id || !$course_id) {
-    // Возвращаем пустой массив, а не ошибку!
     echo json_encode([]);
     exit;
 }
@@ -33,5 +32,5 @@ try {
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     error_log("Ошибка в get-attendance-by-course.php: " . $e->getMessage());
-    echo json_encode([]); // ← даже при ошибке — массив!
+    echo json_encode([]); 
 }

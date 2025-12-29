@@ -65,6 +65,7 @@ try {
         ];
     }
 
+    //отправляем данные
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);

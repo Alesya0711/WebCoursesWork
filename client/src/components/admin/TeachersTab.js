@@ -92,13 +92,13 @@ export default function TeachersTab() {
     const data = await res.json();
 
     if (res.ok) {
-  const updated = await fetch('/api/teachers.php').then(r => r.json());
-  setTeachers(updated);
-  setShowAddForm(false);
-} else {
-  setErrorMessage(data.error || 'Ошибка добавления');
-  setShowErrorModal(true);
-}
+      const updated = await fetch('/api/teachers.php').then(r => r.json());
+      setTeachers(updated);
+      setShowAddForm(false);
+    } else {
+      setErrorMessage(data.error || 'Ошибка добавления');
+      setShowErrorModal(true);
+    }
   };
 
   const handleSaveEdit = async () => {
@@ -110,13 +110,13 @@ export default function TeachersTab() {
     const data = await res.json();
 
     if (res.ok) {
-  const updated = await fetch('/api/teachers.php').then(r => r.json());
-  setTeachers(updated);
-  setShowAddForm(false);
-} else {
-  setErrorMessage(data.error || 'Ошибка добавления');
-  setShowErrorModal(true);
-}
+      const updated = await fetch('/api/teachers.php').then(r => r.json());
+      setTeachers(updated);
+      setEditingTeacher(false);
+    } else {
+      setErrorMessage(data.error || 'Ошибка добавления');
+      setShowErrorModal(true);
+    }
   };
 
   const handleFormChange = (e) => {

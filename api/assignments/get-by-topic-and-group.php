@@ -3,9 +3,11 @@
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config.php';
 
+//получаем данные
 $topic_id = (int)($_GET['topic_id'] ?? 0);
 $group_id = (int)($_GET['group_id'] ?? 0);
 
+//проверяем все обязательные параметры
 if (!$topic_id || !$group_id) {
     http_response_code(400);
     echo json_encode(['error' => 'topic_id и group_id обязательны']);
@@ -31,12 +33,13 @@ try {
           AND u.is_active = TRUE
         ORDER BY s.last_name
     ";
-    
+    //выполяем запрос
     $stmt = $pdo->prepare($sql);
+    //передаем значения
     $stmt->execute([$topic_id, $group_id]);
-    
+    //получаем строки как массив
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+    //преобразуем в json
     echo json_encode($results, JSON_UNESCAPED_UNICODE);
     
 } catch (Exception $e) {

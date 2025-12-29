@@ -13,7 +13,9 @@ try {
         JOIN courses c ON g.course_id = c.course_id
         ORDER BY c.course_name, g.group_name
     ";
+    //выполняем запрос
     $stmt = $pdo->query($sql);
+    //возвращаем данные в формате json
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);

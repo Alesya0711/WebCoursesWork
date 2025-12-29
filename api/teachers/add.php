@@ -25,14 +25,14 @@ if (!$last_name || !$first_name || !$username || !$password) {
     exit;
 }
 
-// Валидация email (как в твоём C#-коде)
+// Валидация email
 if ($email && !preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $email)) {
     http_response_code(400);
     echo json_encode(['error' => 'Некорректный email']);
     exit;
 }
 
-// Генерация хеша пароля (как в C#)
+// Генерация хеша пароля
 function hashPassword($password) {
     $salt = random_bytes(32);
     $passwordBytes = mb_convert_encoding($password, 'UTF-8');
@@ -62,7 +62,6 @@ try {
 } catch (Exception $e) {
     $pdo->rollBack();
     http_response_code(500);
-    // Извлекаем текст ошибки из PostgreSQL (P0001 — наш RAISE EXCEPTION)
     $msg = $e->getMessage();
     if (preg_match('/ERROR:\s*(.+)/', $msg, $m)) {
         $msg = trim($m[1]);

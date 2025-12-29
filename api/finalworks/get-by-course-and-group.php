@@ -2,10 +2,10 @@
 // api/finalworks/get-by-course-and-group.php
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config.php';
-
+//получааем данные
 $course_id = (int)($_GET['course_id'] ?? 0);
 $group_id = (int)($_GET['group_id'] ?? 0);
-
+//проверяем обязательные поля
 if (!$course_id || !$group_id) {
     echo json_encode([], JSON_UNESCAPED_UNICODE);
     exit;
@@ -28,8 +28,10 @@ try {
         ORDER BY s.last_name
     ";
 
+    //выполняем запрос
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$course_id, $group_id]);
+    //отправляем данные в формате json
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {

@@ -3,8 +3,9 @@
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config.php';
 
+//получаем данные
 $input = json_decode(file_get_contents('php://input'), true);
-
+//проверяем значения
 if (!isset($input['attendance']) || !is_array($input['attendance'])) {
     http_response_code(400);
     echo json_encode(['error' => 'attendance обязателен и должен быть массивом']);
@@ -12,9 +13,10 @@ if (!isset($input['attendance']) || !is_array($input['attendance'])) {
 }
 
 try {
+    //начало транзакции
     $pdo->beginTransaction();
     $stmt = $pdo->prepare("INSERT INTO attendance (student_id, lesson_id, is_present) VALUES (?, ?, ?) ON CONFLICT (student_id, lesson_id) DO UPDATE SET is_present = EXCLUDED.is_present");
-    
+    //передаем данные
     foreach ($input['attendance'] as $record) {
         $student_id = (int)$record['student_id'];
         $lesson_id = (int)$record['lesson_id'];
@@ -22,7 +24,7 @@ try {
         
         $stmt->execute([$student_id, $lesson_id, $is_present]);
     }
-    
+    //коммитим изменения
     $pdo->commit();
     echo json_encode(['success' => true]);
 } catch (Exception $e) {

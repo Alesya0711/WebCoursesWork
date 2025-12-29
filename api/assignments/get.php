@@ -2,7 +2,7 @@
 // api/assignments/get.php
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config.php';
-
+//получаем данные и проверяем их
 $topic_id = (int)($_GET['topic_id'] ?? 0);
 if (!$topic_id) {
     http_response_code(400);
@@ -26,7 +26,9 @@ try {
         WHERE ia.topic_id = ? AND u.is_active = TRUE
         ORDER BY s.last_name
     ");
+    //выполняем запрос
     $stmt->execute([$topic_id]);
+    //получаем данные и преобразуем их в json
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     error_log("Ошибка в assignments/get.php: " . $e->getMessage());

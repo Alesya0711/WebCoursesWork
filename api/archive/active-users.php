@@ -1,5 +1,6 @@
 <?php
 // api/archive/active-users.php
+//выходной формат json
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config.php';
 
@@ -26,7 +27,9 @@ try {
         WHERE u.is_active = TRUE AND u.role = 'teacher'
         ORDER BY role_label, full_name
     ";
+    //выполняем запрос
     $stmt = $pdo->query($sql);
+    //получаем массив строк, потом преобразуем в json, без флага просто набор регистров
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);

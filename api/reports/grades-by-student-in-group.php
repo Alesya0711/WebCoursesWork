@@ -62,7 +62,7 @@ try {
         ];
     }
 
-    // Потом итоговая работа (если есть)
+    // Потом итоговая работа 
     if ($finalWork) {
         $result[] = [
             'course_name' => $assignments[0]['course_name'] ?? '',

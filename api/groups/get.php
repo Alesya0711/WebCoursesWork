@@ -2,9 +2,9 @@
 // api/groups/get.php
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config.php';
-
+//получение данных
 $course_id = isset($_GET['course_id']) ? (int)$_GET['course_id'] : 0;
-
+//проверка данных
 if (!$course_id) {
     http_response_code(400);
     echo json_encode(['error' => 'Параметр course_id обязателен']);
@@ -26,10 +26,11 @@ try {
         ORDER BY g.group_name
     ";
 
+    //выполнение запроса
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$course_id]);
+    //отправка данных в формате json
     $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     echo json_encode($groups, JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);

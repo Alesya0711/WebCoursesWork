@@ -3,6 +3,7 @@
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config.php';
 
+//получаем неактивных пользователей
 try {
     $sql = "
         SELECT 
@@ -20,7 +21,9 @@ try {
         WHERE u.is_active = FALSE
         ORDER BY u.role, full_name
     ";
+    //выполняем запрос
     $stmt = $pdo->query($sql);
+    //получаем данные, преобразуем в json
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);

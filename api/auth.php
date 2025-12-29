@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 require_once 'config.php';
-
+//проверка http метода
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Метод не разрешён']);
@@ -20,7 +20,7 @@ if (!$username || !$password) {
 }
 
 try {
-    // Сначала получаем пользователя из users (без email!)
+    // Сначала получаем пользователя из users
     $stmt = $pdo->prepare("
         SELECT 
             u.user_id,
@@ -32,6 +32,7 @@ try {
     $stmt->execute([$username]);
     $userData = $stmt->fetch();
 
+    //проверяем пароль
     if (!$userData || !verifyPassword($password, $userData['hash_password'])) {
         http_response_code(401);
         echo json_encode(['error' => 'Неверный логин или пароль']);
@@ -41,7 +42,7 @@ try {
     $user_id = (int)$userData['user_id'];
     $role = $userData['role'];
 
-    // По умолчанию — нет данных
+    // По умолчанию — нет данных в ответе
     $response = [
         'user_id' => $user_id,
         'role' => $role,
@@ -89,10 +90,8 @@ try {
             $response['email'] = $student['email'];
         }
     }
-    // Если админ — email можно оставить null или задать отдельно
+    // Если админ
     elseif ($role === 'admin') {
-        // Админ может не иметь email в teachers/students
-        // Можно добавить отдельную таблицу admins, если нужно
         $response['email'] = null;
     }
 
@@ -105,6 +104,7 @@ try {
     echo json_encode(['error' => 'Внутренняя ошибка сервера']);
 }
 
+//проверка пароля
 function verifyPassword($password, $storedHash) {
     if (empty($password) || empty($storedHash)) return false;
     $parts = explode(':', $storedHash);

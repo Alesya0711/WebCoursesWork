@@ -2,7 +2,7 @@
 // api/assignments/students-by-topic.php
 header('Content-Type: application/json; charset=utf-8');
 require_once '../config.php';
-
+//получаем данные и проверяем их
 $topic_id = (int)($_GET['topic_id'] ?? 0);
 if (!$topic_id) {
     http_response_code(400);
@@ -11,6 +11,7 @@ if (!$topic_id) {
 }
 
 try {
+    //выполняем запрос
     $stmt = $pdo->prepare("SELECT course_id FROM topics WHERE topic_id = ?");
     $stmt->execute([$topic_id]);
     $course_id = $stmt->fetchColumn();
@@ -19,6 +20,7 @@ try {
         exit;
     }
 
+    //выполняем запрос
     $stmt = $pdo->prepare("
         SELECT s.student_id, s.last_name || ' ' || s.first_name AS full_name
         FROM students s
@@ -28,7 +30,9 @@ try {
         WHERE g.course_id = ? AND u.is_active = TRUE
         ORDER BY s.last_name
     ");
+    //передаем значение
     $stmt->execute([$course_id]);
+    //получаем данные в формате json
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC), JSON_UNESCAPED_UNICODE);
 } catch (Exception $e) {
     http_response_code(500);
